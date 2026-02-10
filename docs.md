@@ -107,23 +107,23 @@ Every table easily has:
 ### Core CRUD
 
 * `POST /artifacts`
-
+Add artifact
 * `GET /artifacts`
-
+Get all artifacts
 * `GET /artifacts/{id}`
-
+Get artifact by id
 * `PUT /artifacts/{id}`
-
+Edit artifact by id
 * `DELETE /artifacts/{id}`
-
+Delete artifact by id
 * `POST /loans`
-
+add loan
 * `GET /loans/{id}`
-
+Get loan by id
 * `PATCH /loans/{id}/status`
-
+update loan status by id
 * `DELETE /loans/{id}`
-
+Delete loan by id
 ---
 
 ### Relationship-Based Endpoints (Required)

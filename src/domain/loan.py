@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from src.base import Base
 
 class Loan(Base):
-    __tablename__ = 'loan'
+    __tablename__ = 'loans'
     loan_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     start_date= Column(DateTime, default = datetime.now(timezone.utc))
     end_date= Column(DateTime, nullable=True)

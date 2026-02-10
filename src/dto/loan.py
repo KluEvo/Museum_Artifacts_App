@@ -4,9 +4,22 @@ from pydantic import BaseModel
 from uuid import UUID
 
 class LoanCreate(BaseModel):
-    pass #blah
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    loan_status: Optional[str] = None
+    insurance_value: Optional[str] = None
+    to_museum_id: UUID
+    from_museum_id: UUID
 
 
 class LoanRead(LoanCreate):
-    pass #blah
+    loan_id: UUID
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    loan_status: Optional[str] = None
+    insurance_value: Optional[str] = None
+    to_museum_id: UUID
+    from_museum_id: UUID
 
+    class Config:
+        from_attributes = True

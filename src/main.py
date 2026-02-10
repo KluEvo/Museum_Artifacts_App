@@ -1,7 +1,6 @@
 import os
 import requests
 
-
 class main:
     def __init__(self):
         self.running = True
