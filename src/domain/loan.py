@@ -12,5 +12,5 @@ class Loan(Base):
     loan_status= Column(String, nullable=False)
     insurance_value= Column(String, nullable=False)
     
-    to_museum_id= Column(UUID(as_uuid=True), ForeignKey("museum.museum_id"), nullable=False)
-    from_museum_id= Column(UUID(as_uuid=True), ForeignKey("museum.museum_id"), nullable=True)
+    to_museum_id= Column(UUID(as_uuid=True), ForeignKey("museums.museum_id"), nullable=False)
+    from_museum_id= Column(UUID(as_uuid=True), ForeignKey("museums.museum_id"), nullable=True)

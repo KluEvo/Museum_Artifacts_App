@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    container_name: myapp
+    container_name: museumapp
     env_file:
       - .env
     volumes:
@@ -15,7 +15,7 @@ services:
 
   db:
     image: postgres:15
-    container_name: mydb
+    container_name: museumdb
     env_file:
       - .env
     environment:

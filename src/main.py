@@ -1,5 +1,8 @@
 import os
 import requests
+from fastapi import Depends, FastAPI, Query
+
+app = FastAPI(title="Museum API")
 
 class main:
     def __init__(self):
@@ -17,42 +20,24 @@ class main:
             case 'exit':
                 self.running = False
                 print("goodbye!")
-            case 'getAllRecords':
-                self.get_all_records()
-            case 'addBook':
-                self.add_book()
-            case 'findByName':
-                self.find_book_by_name()
-            case 'removeBook':
-                self.remove_book()
-            case 'updateBook':
-                self.update_book()
-            case 'getAveragePrice':
-                self.get_average_price()
-            case 'getTopBooks':
-                self.get_top_books()
-            case 'getValueScores':
-                self.get_value_scores()
-            case 'medianPriceByGenre':
-                self.get_median_price_by_genre()
-            case 'priceSD':
-                self.get_price_std_dev()
-            case 'priceCorr':
-                self.get_price_correlation()
-            case 'pricePercent':
-                self.get_price_percentiles()
-            case 'ratingHist':
-                self.get_rating_histogram()
-            case 'genrePop2026':
-                self.get_most_popular_genre_2026()
-            case 'checkIn':
-                self.check_in_book()
-            case 'checkOut':
-                self.check_out_book()
-            case 'checkoutHist':
-                self.get_check_out_history()
-            case 'getJoke':
-                self.get_joke()
+            case 'getAllArtifacts':
+                self.get_all_artifacts()
+            case 'addArtifact':
+                self.add_artifact()
+            case 'findArtifactById':
+                self.find_artifact_by_id()
+            case 'removeArtifact':
+                self.remove_artifact()
+            case 'updateArtifact':
+                self.update_artifact()
+            case 'addLoan':
+                self.add_loan()
+            case 'getLoanById':
+                self.get_loan_by_id()
+            case 'updateLoan':
+                self.update_loan()
+            case 'deleteLoan':
+                self.delete_Loan()
             case 'help':
                 print("Commands:")
                 print("addBook, removeBook, updateBook, getAllRecords, findByName, getJoke, help, exit")
@@ -62,3 +47,38 @@ class main:
             case _:
                 print("No valid command detected")
 
+    def add_artifact(self):
+        #Add implementation
+        pass
+
+    def get_all_artifacts(self):
+        #Add implementation
+        pass
+
+    def find_artifact_by_id(self):
+        #Add implementation
+        pass
+
+    def update_artifact(self):
+        #Add implementation
+        pass
+
+    def remove_artifact(self):
+        #Add implementation
+        pass
+
+    def add_artifact(self):
+        #Add implementation
+        pass
+
+    def add_artifact(self):
+        #Add implementation
+        pass
+
+    def add_artifact(self):
+        #Add implementation
+        pass
+
+    def add_artifact(self):
+        #Add implementation
+        pass
