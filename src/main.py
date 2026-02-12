@@ -1,6 +1,9 @@
 import os
 import requests
 from fastapi import Depends, FastAPI, Query
+from sqlalchemy.orm import Session
+from sqlalchemy import text
+
 
 from typing import List
 from src.db.deps import get_db
@@ -63,6 +66,20 @@ class main:
     
     def get_condition_report_service(repo: ConditionReportRepository = Depends(get_condition_report_repository)) -> ConditionReportService:
         return ConditionReportService(repo)
+
+    # function to run a sql file "file.sql":
+    def run_sql(db: Session = Depends(get_db)):
+        with open('file.sql', 'r') as file:
+            sql_commands = file.read()
+            
+        try:
+            db.execute(text(sql_commands))
+            db.commit()
+            
+            print("SQL file executed successfully.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
 
     # TODO: Edit all cases for current project
     def handle_command(self, cmd):
