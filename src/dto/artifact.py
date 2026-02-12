@@ -10,7 +10,7 @@ class ArtifactCreate(BaseModel):
     discovery_date: Optional[datetime] = None
     estimated_value: Optional[int] = None 
     
-    parent_artifact: UUID
+    parent_artifact: Optional[UUID] = None
     museum_id: UUID 
 
 
@@ -21,7 +21,7 @@ class ArtifactRead(ArtifactCreate):
     name: str
     discovery_date: Optional[datetime] = None
     estimated_value: Optional[int] = None 
-    parent_artifact: UUID
+    parent_artifact: Optional[UUID] = None
     museum_id: UUID 
 
     class Config:

@@ -10,7 +10,7 @@ class ConditionReportCreate(BaseModel):
     notes: Optional[str] = None
 
 
-class ConditionRead(ConditionReportCreate):
+class ConditionReportRead(ConditionReportCreate):
     artifact_id: UUID
     report_date: datetime
     condition_rating: Optional[float] = None

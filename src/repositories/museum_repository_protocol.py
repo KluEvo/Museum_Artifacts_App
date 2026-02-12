@@ -1,5 +1,5 @@
 from typing import List, Protocol
-from src.domain.loan import Museum
+from src.domain.museum import Museum
 
 class MuseumRepositoryProtocol(Protocol):
     def get_all_museums(self) -> List[Museum]:

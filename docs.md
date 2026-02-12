@@ -20,9 +20,10 @@ A backend system for museums to track:
 * artifact_id (PK)
 * name
 * accession_number
-* origin_date
+* discovery_date
 * estimated_value
-* condition_status
+* parent_artifact (id)
+* museum_id (FK)
 
 
 ---
@@ -31,22 +32,25 @@ A backend system for museums to track:
 
 **`Museum`**
 
-* museum_id
+* museum_id (PK)
 * name
 * location
 * contact_email
 
 **`Loan`**
 
-* loan_id
+* loan_id (PK)
 * start_date
 * end_date
+* to_museum_id(FK)
+* from_museum_id(FK)
 * loan_status
 * insurance_value
 
 **`ConditionReport`**
 
-* report_id
+* report_id (PK)
+* artifact_id (FK)
 * report_date
 * condition_rating
 * notes
@@ -83,7 +87,7 @@ A backend system for museums to track:
 
 **Artifact → Artifact**
 
-* `parent_artifact_id` (nullable FK to artifact_id)
+* `parent_artifact` (nullable FK to artifact_id)
 
 Use cases:
 
@@ -92,15 +96,6 @@ Use cases:
 * Fragmented pieces of a single original item
 
 ---
-
-## Table Complexity
-
-Every table easily has:
-
-* Multiple non-trivial fields
-* Dates, enums, decimals, text
-* Constraints (unique accession_number, date checks, etc.)
-
 
 ## Endpoints
 

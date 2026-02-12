@@ -8,7 +8,7 @@ class ConditionReport(Base):
     __tablename__ = 'condition_reports'
 
     report_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    artifact_id = Column(UUID(as_uuid=True), nullable=False), ForeignKey("artifacts.artifact_id")
+    artifact_id = Column(UUID(as_uuid=True), ForeignKey("artifacts.artifact_id"), nullable=False)
     
     report_date = Column(DateTime, nullable=False)
     condition_rating = Column(Float, nullable=False)

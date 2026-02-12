@@ -14,11 +14,26 @@ class ArtifactService:
     def remove_artifact(self, artifact_id: str) -> str:
         return self.artifact_repo.remove_artifact(artifact_id)
 
-    def find_artifact_by_name(self, query: str) -> list[Artifact]:
+    def find_artifacts_by_name(self, query: str) -> list[Artifact]:
         if not isinstance(query, str):
             raise ValueError("Expected str, got something else")
-        return self.artifact_repo.find_artifact_by_name(query)
+        return self.artifact_repo.get_artifacts_by_name(query)
 
+    def find_artifacts_by_accession_number(self, query: str) -> list[Artifact]:
+        if not isinstance(query, str):
+            raise ValueError("Expected str, got something else")
+        return self.artifact_repo.get_artifacts_by_accession_number(query)
+
+    def find_artifacts_by_museum(self, query: str) -> list[Artifact]:
+        if not isinstance(query, str):
+            raise ValueError("Expected str, got something else")
+        return self.artifact_repo.get_artifacts_by_museum(query)
+
+    def find_parent_artifact(self, query: str) -> list[Artifact]:
+        if not isinstance(query, str):
+            raise ValueError("Expected str, got something else")
+        return self.artifact_repo.get_parent_artifact(query)
+    
     def find_artifact_by_id(self, artifact_id: str) -> Artifact:
         if not isinstance(artifact_id, str):
             raise ValueError("Expected str, got something else")

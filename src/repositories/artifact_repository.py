@@ -16,21 +16,28 @@ class ArtifactRepository(ArtifactRepositoryProtocol):
         return str(artifact.artifact_id)
     
     def remove_artifact(self, artifact_id: str) -> str:
-        artifact = self.get_artifact_by_id(artifact_id)
+        artifacts = self.get_artifact_by_id(artifact_id)
+        if len(artifacts) != 1:
+            raise ValueError(f"No artifact with id: {artifact_id}")
+        artifact = artifacts[0]
         self.session.delete(artifact)
         self.session.commit()
-        return artifact_id
+        print("deleted")
+        return str(artifact_id)
     
     def get_artifact_by_id(self, artifact_id: str) -> Artifact:
         return self.session.query(Artifact).filter(Artifact.artifact_id == artifact_id).all()
 
-    def get_artifact_by_accession_number(self, accession_number: str) -> Artifact:
+    def get_artifacts_by_accession_number(self, accession_number: str) -> List[Artifact]:
         return self.session.query(Artifact).filter(Artifact.accession_number == accession_number).all()
+    
+    def get_artifacts_by_name(self, name: str) -> List[Artifact]:
+        return self.session.query(Artifact).filter(Artifact.name == name).all()
 
     def get_artifacts_by_museum(self, museum_id: str) -> List[Artifact]:
         return self.session.query(Artifact).filter(Artifact.museum_id == museum_id).all()
 
-    def get_parent_artifacts(self, artifact_id: str) -> List[Artifact]:
+    def get_parent_artifact(self, artifact_id: str) -> List[Artifact]:
         child = self.session.query(Artifact).filter(Artifact.artifact_id == artifact_id).first()
         if not child or not child.parent_id:
             return []

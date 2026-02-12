@@ -1,8 +1,8 @@
-from repositories.condition_report_repository_protocol import ConditionRepositoryProtocol
+from src.repositories.condition_report_repository_protocol import ConditionReportRepositoryProtocol
 from src.domain.condition_report import ConditionReport
 
 class ConditionReportService:
-    def __init__(self, condition_report_repo: ConditionRepositoryProtocol):
+    def __init__(self, condition_report_repo: ConditionReportRepositoryProtocol):
         self.condition_report_repo = condition_report_repo
 
     def add_condition_report(self, condition_report: ConditionReport) -> str:

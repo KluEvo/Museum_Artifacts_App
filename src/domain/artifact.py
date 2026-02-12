@@ -16,6 +16,19 @@ class Artifact(Base):
     
     parent_artifact = Column(UUID(as_uuid=True), ForeignKey("artifacts.artifact_id"), nullable=True)
     museum_id = Column(UUID(as_uuid=True), ForeignKey("museums.museum_id"), nullable=False)
+
+    
+    parent_artifact_rel = relationship(
+        "Artifact",
+        remote_side=[artifact_id],
+        backref="child_artifacts"
+    )
+
+    
+    museum_id_rel = relationship(
+        "Museum",
+        backref="artifact"
+    )
     
 
 
