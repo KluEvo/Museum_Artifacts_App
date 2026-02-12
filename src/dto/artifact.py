@@ -27,3 +27,12 @@ class ArtifactRead(ArtifactCreate):
     class Config:
         from_attributes = True
 
+class ArtifactUpdate(BaseModel):
+
+    accession_number: Optional[str] = None
+    name: Optional[str] = None
+    discovery_date: Optional[datetime] = None
+    estimated_value: Optional[int] = None 
+    
+    parent_artifact: Optional[UUID] = None
+    museum_id: Optional[UUID] = None

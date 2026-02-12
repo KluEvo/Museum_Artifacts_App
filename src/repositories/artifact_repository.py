@@ -26,7 +26,7 @@ class ArtifactRepository(ArtifactRepositoryProtocol):
         return str(artifact_id)
     
     def get_artifact_by_id(self, artifact_id: str) -> Artifact:
-        return self.session.query(Artifact).filter(Artifact.artifact_id == artifact_id).all()
+        return self.session.query(Artifact).filter(Artifact.artifact_id == artifact_id).first()
 
     def get_artifacts_by_accession_number(self, accession_number: str) -> List[Artifact]:
         return self.session.query(Artifact).filter(Artifact.accession_number == accession_number).all()
@@ -57,3 +57,4 @@ class ArtifactRepository(ArtifactRepositoryProtocol):
 
         self.session.commit()
         return str(artifact_to_update.artifact_id)
+    

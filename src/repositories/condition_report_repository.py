@@ -11,12 +11,12 @@ class ConditionReportRepository(ConditionReportRepositoryProtocol):
         return self.session.query(ConditionReport).all()
 
     def add_report(self, report: ConditionReport) -> ConditionReport:
-        self.session.add(ConditionReport)
+        self.session.add(report)
         self.session.commit()
-        return str(ConditionReport.report_id)
+        return str(report.report_id)
 
     def get_report_by_id(self, report_id: str) -> ConditionReport:
-        return self.session.query(ConditionReport).filter(ConditionReport.report_id == report_id).all()
+        return self.session.query(ConditionReport).filter(ConditionReport.report_id == report_id).first()
 
     def get_reports_by_artifact(self, artifact_id: str) -> List[ConditionReport]:
         return self.session.query(ConditionReport).filter(ConditionReport.artifact_id == artifact_id).all()
@@ -40,7 +40,7 @@ class ConditionReportRepository(ConditionReportRepositoryProtocol):
         return str(report.report_id)
 
     def remove_report(self, report_id: str) -> str:
-        report = self.get_artifact_by_id(report_id)
+        report = self.get_report_by_id(report_id)
         self.session.delete(report)
         self.session.commit()
         return str(report.report_id)

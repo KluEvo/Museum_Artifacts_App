@@ -16,3 +16,9 @@ class ArtifactLoanRepositoryProtocol(Protocol):
     
     def remove_artifact_loan(self, artifact_id: str, loan_id: str) -> Tuple[str]:
         ...
+
+    def get_artifact_loans_by_artifact(self, artifact_id: str) -> List[ArtifactLoan]:
+        ...
+        
+    def get_artifact_loans_by_loan(self, loan_id: str) -> List[ArtifactLoan]:
+        ...

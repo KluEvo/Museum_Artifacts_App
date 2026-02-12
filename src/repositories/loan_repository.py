@@ -9,7 +9,10 @@ class LoanRepository(LoanRepositoryProtocol):
 
     def get_all_loans(self) -> List[Loan]:
         return self.session.query(Loan).all()
-
+    
+    def get_loan_by_id(self, loan_id):
+        return self.session.query(Loan).filter(Loan.loan_id == loan_id).first()
+    
     def add_loan(self, loan: Loan) -> str:
         self.session.add(loan)
         self.session.commit()

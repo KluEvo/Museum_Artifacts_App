@@ -14,3 +14,5 @@ class Loan(Base):
     
     to_museum_id= Column(UUID(as_uuid=True), ForeignKey("museums.museum_id"), nullable=False)
     from_museum_id= Column(UUID(as_uuid=True), ForeignKey("museums.museum_id"), nullable=True)
+
+    
