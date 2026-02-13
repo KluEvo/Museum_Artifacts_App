@@ -24,8 +24,8 @@ class ConditionReportRepository(ConditionReportRepositoryProtocol):
     def update_report(self, report_id: str, updated_fields_dict: dict) -> str:
         report = self.session.get(ConditionReport, report_id)
         
-        if report is None:
-            raise ValueError(f"ConditionReport not found: {report_id}")
+        if not report:
+            return None
 
         
         allowed_fields = {col.name for col in ConditionReport.__table__.columns if not col.primary_key}
@@ -41,6 +41,8 @@ class ConditionReportRepository(ConditionReportRepositoryProtocol):
 
     def remove_report(self, report_id: str) -> str:
         report = self.get_report_by_id(report_id)
+        if not report:
+            return None
         self.session.delete(report)
         self.session.commit()
         return str(report.report_id)

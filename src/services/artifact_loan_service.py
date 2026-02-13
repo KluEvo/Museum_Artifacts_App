@@ -8,6 +8,7 @@ from src.exceptions import (
     NotFoundException,
 )
 
+
 class ArtifactLoanService:
     def __init__(self, artifact_loan_repo: ArtifactLoanRepositoryProtocol):
         self.artifact_loan_repo = artifact_loan_repo
@@ -28,11 +29,12 @@ class ArtifactLoanService:
             raise ValidationException("Artifact ID and Loan ID must be strings.")
 
         try:
-            return str(self.artifact_loan_repo.get_artifact_loan_by_id(artifact_id, loan_id))
-        except ValueError:
-            raise NotFoundException(
-                f"ArtifactLoan with artifact_id {artifact_id} and loan_id {loan_id} not found."
-            )
+            artifact_loan = self.artifact_loan_repo.get_artifact_loan_by_id(artifact_id, loan_id)
+            if artifact_loan is None:
+                raise NotFoundException(
+                    f"ArtifactLoan with artifact_id {artifact_id} and loan_id {loan_id} not found."
+                )
+            return artifact_loan
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while retrieving artifact loan."
@@ -43,7 +45,10 @@ class ArtifactLoanService:
             raise ValidationException("Artifact ID must be a string.")
 
         try:
-            return self.artifact_loan_repo.get_artifact_loans_by_artifact(artifact_id)
+            loans = self.artifact_loan_repo.get_artifact_loans_by_artifact(artifact_id)
+            if not loans:
+                raise NotFoundException(f"No artifact loans found for artifact_id {artifact_id}.")
+            return loans
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while retrieving artifact loans by artifact."
@@ -54,7 +59,10 @@ class ArtifactLoanService:
             raise ValidationException("Loan ID must be a string.")
 
         try:
-            return self.artifact_loan_repo.get_artifact_loans_by_loan(loan_id)
+            loans = self.artifact_loan_repo.get_artifact_loans_by_loan(loan_id)
+            if not loans:
+                raise NotFoundException(f"No artifact loans found for loan_id {loan_id}.")
+            return loans
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while retrieving artifact loans by loan."

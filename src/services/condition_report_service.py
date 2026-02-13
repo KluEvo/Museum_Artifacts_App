@@ -7,6 +7,7 @@ from src.exceptions import (
     NotFoundException,
 )
 
+
 class ConditionReportService:
     def __init__(self, condition_report_repo: ConditionReportRepositoryProtocol):
         self.condition_report_repo = condition_report_repo
@@ -22,16 +23,15 @@ class ConditionReportService:
                 "Database error occurred while adding condition report."
             ) from e
     
-    def get_condition_report_by_id(self, condition_report_id: str) -> str:
+    def get_condition_report_by_id(self, condition_report_id: str) -> ConditionReport:
         if not isinstance(condition_report_id, str):
             raise ValidationException("ConditionReport ID must be a string.")
 
         try:
-            return self.condition_report_repo.get_report_by_id(condition_report_id)
-        except ValueError:
-            raise NotFoundException(
-                f"ConditionReport with id {condition_report_id} not found."
-            )
+            report = self.condition_report_repo.get_report_by_id(condition_report_id)
+            if report is None:
+                raise NotFoundException(f"ConditionReport with id {condition_report_id} not found.")
+            return report
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while retrieving condition report."
@@ -44,26 +44,27 @@ class ConditionReportService:
             raise ValidationException("Updated fields must be a dictionary.")
 
         try:
-            return self.condition_report_repo.update_condition_report(condition_report_id, updated_fields_dict)
-        except ValueError as e:
-            raise NotFoundException(str(e))
+            updated_id = self.condition_report_repo.update_condition_report(
+                condition_report_id, updated_fields_dict
+            )
+            if not updated_id:
+                raise NotFoundException(f"ConditionReport with id {condition_report_id} not found.")
+            return updated_id
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while updating condition report."
             ) from e
         
-    def remove_condition_report(self, condition_report_id: str):
+    def remove_condition_report(self, condition_report_id: str) -> str:
         if not isinstance(condition_report_id, str):
             raise ValidationException("ConditionReport ID must be a string.")
 
         try:
-            return self.condition_report_repo.remove_condition_report(condition_report_id)
-        except ValueError:
-            raise NotFoundException(
-                f"ConditionReport with id {condition_report_id} not found."
-            )
+            removed_id = self.condition_report_repo.remove_condition_report(condition_report_id)
+            if not removed_id:
+                raise NotFoundException(f"ConditionReport with id {condition_report_id} not found.")
+            return removed_id
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while removing condition report."
             ) from e
-

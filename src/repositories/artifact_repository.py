@@ -2,6 +2,7 @@ from typing import List
 from sqlalchemy.orm import Session
 from src.domain.artifact import Artifact
 from src.repositories.artifact_repository_protocol import ArtifactRepositoryProtocol
+import uuid
 
 class ArtifactRepository(ArtifactRepositoryProtocol):
     def __init__(self, session : Session):
@@ -16,17 +17,16 @@ class ArtifactRepository(ArtifactRepositoryProtocol):
         return str(artifact.artifact_id)
     
     def remove_artifact(self, artifact_id: str) -> str:
-        artifacts = self.get_artifact_by_id(artifact_id)
-        if len(artifacts) != 1:
-            raise ValueError(f"No artifact with id: {artifact_id}")
-        artifact = artifacts[0]
+        artifact = self.get_artifact_by_id(artifact_id)
+        if not artifact:
+            return None
         self.session.delete(artifact)
-        self.session.commit()
-        print("deleted")
+        self.session.commit() 
         return str(artifact_id)
     
     def get_artifact_by_id(self, artifact_id: str) -> Artifact:
-        return self.session.query(Artifact).filter(Artifact.artifact_id == artifact_id).first()
+        uuid_artifact_id = uuid.UUID(artifact_id)
+        return self.session.query(Artifact).filter(Artifact.artifact_id == uuid_artifact_id).first()
 
     def get_artifacts_by_accession_number(self, accession_number: str) -> List[Artifact]:
         return self.session.query(Artifact).filter(Artifact.accession_number == accession_number).all()
@@ -38,13 +38,15 @@ class ArtifactRepository(ArtifactRepositoryProtocol):
         return self.session.query(Artifact).filter(Artifact.museum_id == museum_id).all()
 
     def get_parent_artifact(self, artifact_id: str) -> List[Artifact]:
-        child = self.session.query(Artifact).filter(Artifact.artifact_id == artifact_id).first()
+        uuid_artifact_id = uuid.UUID(artifact_id)
+        child = self.session.query(Artifact).filter(Artifact.artifact_id == uuid_artifact_id).first()
         if not child or not child.parent_id:
             return []
-        return self.session.query(Artifact).filter(Artifact.artifact_id == child.parent_artifact_id).all()
+        return self.session.query(Artifact).filter(Artifact.artifact_id == child.parent_artifact).all()
 
     def update_artifact(self, artifact_id: str, updated_fields_dict: dict) -> str:
-        artifact_to_update = self.session.query(Artifact).filter(Artifact.artifact_id == artifact_id).first()
+        uuid_artifact_id = uuid.UUID(artifact_id)
+        artifact_to_update = self.session.query(Artifact).filter(Artifact.artifact_id == uuid_artifact_id).first()
         if not artifact_to_update:
             return None 
 

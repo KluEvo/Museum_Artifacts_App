@@ -6,7 +6,7 @@ class AppErrorException(Exception):
 
 
 class ValidationException(AppErrorException):
-    status_code = 400
+    status_code = 422
 
 
 class NotFoundException(AppErrorException):

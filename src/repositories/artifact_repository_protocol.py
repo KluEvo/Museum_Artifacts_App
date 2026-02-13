@@ -3,6 +3,9 @@ from src.domain.artifact import Artifact
 
 class ArtifactRepositoryProtocol(Protocol):
 
+    def get_all_artifacts(self) -> List[Artifact]:
+        ...
+        
     def add_artifact(self, artifact: Artifact) -> str:
         ...
 

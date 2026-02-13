@@ -1,7 +1,6 @@
 from src.repositories.artifact_repository_protocol import ArtifactRepositoryProtocol
 from src.domain.artifact import Artifact
 from src.repositories.museum_repository_protocol import MuseumRepositoryProtocol
-from src.domain.museum import Museum
 from sqlalchemy.exc import SQLAlchemyError
 from src.exceptions import (
     AppErrorException,
@@ -9,8 +8,13 @@ from src.exceptions import (
     NotFoundException,
 )
 
+
 class ArtifactService:
-    def __init__(self, artifact_repo: ArtifactRepositoryProtocol, museum_repo: MuseumRepositoryProtocol = None):
+    def __init__(
+        self,
+        artifact_repo: ArtifactRepositoryProtocol,
+        museum_repo: MuseumRepositoryProtocol = None
+    ):
         self.artifact_repo = artifact_repo
         self.museum_repo = museum_repo 
 
@@ -24,7 +28,7 @@ class ArtifactService:
         
     def get_artifact_count(self) -> int:
         try:
-            artifacts =  self.artifact_repo.get_all_artifacts()
+            artifacts = self.artifact_repo.get_all_artifacts()
             return len(artifacts)
         except SQLAlchemyError as e:
             raise AppErrorException(
@@ -47,9 +51,10 @@ class ArtifactService:
             raise ValidationException("Artifact ID must be a string.")
 
         try:
-            return self.artifact_repo.remove_artifact(artifact_id)
-        except ValueError:
-            raise NotFoundException(f"Artifact with id {artifact_id} not found.")
+            removed_id = self.artifact_repo.remove_artifact(artifact_id)
+            if not removed_id:
+                raise NotFoundException(f"Artifact with id {artifact_id} not found.")    
+            return removed_id
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while removing artifact."
@@ -60,7 +65,10 @@ class ArtifactService:
             raise ValidationException("Query must be a string.")
 
         try:
-            return self.artifact_repo.get_artifacts_by_name(query)
+            artifacts = self.artifact_repo.get_artifacts_by_name(query)
+            if not artifacts:
+                raise NotFoundException(f"No artifacts found with name '{query}'.")
+            return artifacts
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while searching artifacts by name."
@@ -71,7 +79,10 @@ class ArtifactService:
             raise ValidationException("Query must be a string.")
 
         try:
-            return self.artifact_repo.get_artifacts_by_accession_number(query)
+            artifacts = self.artifact_repo.get_artifacts_by_accession_number(query)
+            if not artifacts:
+                raise NotFoundException(f"No artifacts found with accession number '{query}'.")
+            return artifacts
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while searching artifacts by accession number."
@@ -79,14 +90,16 @@ class ArtifactService:
 
     def find_artifacts_by_museum(self, query: str) -> list[Artifact]:
         if not isinstance(query, str):
-            raise ValidationException("museum id must be a string.")
+            raise ValidationException("Museum ID must be a string.")
+
         try:
-            self.museum_repo.get_museum_by_id(query)
-            return self.artifact_repo.get_artifacts_by_museum(query)
-        except ValueError:
-            raise NotFoundException(
-                f"Museum with id {query} not found."
-            )
+            museum = self.museum_repo.get_museum_by_id(query)
+            if museum is None:
+                raise NotFoundException(f"Museum with id {query} not found.")
+            artifacts = self.artifact_repo.get_artifacts_by_museum(query)
+            if not artifacts:
+                raise NotFoundException(f"No artifacts found for museum id {query}.")
+            return artifacts
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while searching artifacts by museum."
@@ -97,7 +110,10 @@ class ArtifactService:
             raise ValidationException("Query must be a string.")
 
         try:
-            return self.artifact_repo.get_parent_artifact(query)
+            artifacts = self.artifact_repo.get_parent_artifact(query)
+            if not artifacts:
+                raise NotFoundException(f"No parent artifact found for id {query}.")
+            return artifacts
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while searching parent artifact."
@@ -108,9 +124,10 @@ class ArtifactService:
             raise ValidationException(f"Artifact ID must be a string, got {artifact_id}")
 
         try:
-            return self.artifact_repo.get_artifact_by_id(artifact_id)
-        except ValueError:
-            raise NotFoundException(f"Artifact with id {artifact_id} not found.")
+            artifact = self.artifact_repo.get_artifact_by_id(artifact_id)
+            if artifact is None:
+                raise NotFoundException(f"Artifact with id {artifact_id} not found.")
+            return artifact
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while retrieving artifact by ID."
@@ -124,9 +141,10 @@ class ArtifactService:
             raise ValidationException("Updated fields must be a dictionary.")
 
         try:
-            return self.artifact_repo.update_artifact(artifact_id, updated_fields_dict)
-        except ValueError as e:
-            raise NotFoundException(str(e))
+            updated_id = self.artifact_repo.update_artifact(artifact_id, updated_fields_dict)
+            if not updated_id:
+                raise NotFoundException(f"Artifact with id {artifact_id} not found.")
+            return updated_id
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while updating artifact."

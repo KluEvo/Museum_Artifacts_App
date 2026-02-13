@@ -7,6 +7,7 @@ from src.exceptions import (
     NotFoundException,
 )
 
+
 class LoanService:
     def __init__(self, loan_repo: LoanRepositoryProtocol):
         self.loan_repo = loan_repo
@@ -19,17 +20,18 @@ class LoanService:
             return self.loan_repo.add_loan(loan)
         except SQLAlchemyError as e:
             raise AppErrorException(
-                "Database error occurred while adding museum."
-                ) from e
+                "Database error occurred while adding loan."
+            ) from e
     
-    def get_loan_by_id(self, loan_id: str) -> str:
+    def get_loan_by_id(self, loan_id: str) -> Loan:
         if not isinstance(loan_id, str):
             raise ValidationException("Loan ID must be a string.")
 
         try:
-            return self.loan_repo.get_loan_by_id(loan_id)
-        except ValueError:
-            raise NotFoundException(f"Loan with id {loan_id} not found.")
+            loan = self.loan_repo.get_loan_by_id(loan_id)
+            if loan is None:
+                raise NotFoundException(f"Loan with id {loan_id} not found.")
+            return loan
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while retrieving loan."
@@ -42,22 +44,24 @@ class LoanService:
             raise ValidationException("Updated fields must be a dictionary.")
 
         try:
-            return self.loan_repo.update_loan(loan_id, updated_fields_dict)
-        except ValueError as e:
-            raise NotFoundException(str(e))
+            updated_id = self.loan_repo.update_loan(loan_id, updated_fields_dict)
+            if not updated_id:
+                raise NotFoundException(f"Loan with id {loan_id} not found.")
+            return updated_id
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while updating loan."
             ) from e
     
-    def remove_loan(self, loan_id: str):
+    def remove_loan(self, loan_id: str) -> str:
         if not isinstance(loan_id, str):
             raise ValidationException("Loan ID must be a string.")
 
         try:
-            return self.loan_repo.remove_loan(loan_id)
-        except ValueError:
-            raise NotFoundException(f"Loan with id {loan_id} not found.")
+            removed_id = self.loan_repo.remove_loan(loan_id)
+            if not removed_id:
+                raise NotFoundException(f"Loan with id {loan_id} not found.")
+            return removed_id
         except SQLAlchemyError as e:
             raise AppErrorException(
                 "Database error occurred while removing loan."
