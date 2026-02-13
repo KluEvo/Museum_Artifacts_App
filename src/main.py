@@ -313,6 +313,7 @@ def get_artifacts_in_loan(
             artifacts.append(artifact_svc.find_artifact_by_id(str(artifact_loan.artifact_id)))
         return artifacts
     except Exception as e:
+        # dummy test version
         raise HTTPException(status_code=500, detail = f'An unexpected error has occured: {e}')
 
 @app.get('/loan_history' , response_model=List[LoanRead])
@@ -329,6 +330,7 @@ def get_loan_history_of_artifact(
             loans.append(loan_svc.get_loan_by_id(str(artifact_loan.loan_id)))
         return loans
     except Exception as e:
+        # dummy test version 
         raise HTTPException(status_code=500, detail = f'An unexpected error has occured: {e}')
 
 
