@@ -1,5 +1,6 @@
 from src.repositories.condition_report_repository_protocol import ConditionReportRepositoryProtocol
 from src.domain.condition_report import ConditionReport
+from typing import List
 from sqlalchemy.exc import SQLAlchemyError
 from src.exceptions import (
     AppErrorException,
@@ -28,9 +29,23 @@ class ConditionReportService:
             raise ValidationException("ConditionReport ID must be a string.")
 
         try:
-            report = self.condition_report_repo.get_report_by_id(condition_report_id)
-            if report is None:
+            report = self.condition_report_repo.get_condition_report_by_id(condition_report_id)
+            if not report:
                 raise NotFoundException(f"ConditionReport with id {condition_report_id} not found.")
+            return report
+        except SQLAlchemyError as e:
+            raise AppErrorException(
+                "Database error occurred while retrieving condition report."
+            ) from e
+        
+    def get_condition_report_by_artifact(self, artifact_id: str) -> List[ConditionReport]:
+        if not isinstance(artifact_id, str):
+            raise ValidationException("Artifact ID must be a string.")
+
+        try:
+            report = self.condition_report_repo.get_reports_by_artifact(artifact_id)
+            if not report:
+                raise NotFoundException(f"ConditionReport with Artifact {artifact_id} not found.")
             return report
         except SQLAlchemyError as e:
             raise AppErrorException(

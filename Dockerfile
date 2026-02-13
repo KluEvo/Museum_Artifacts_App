@@ -12,6 +12,7 @@ COPY src /app/src
 COPY src/main.py /app/main.py
 COPY alembic.ini /app/alembic.ini
 COPY alembic /app/alembic
+COPY static /app/static 
 
 # Runtime Stage
 FROM python:3.12-slim

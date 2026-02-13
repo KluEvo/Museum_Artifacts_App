@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Museum Management Dashboard</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Museum Management System</h1>
+  </header>
+
+  <hr />
+
+  <nav>
+    <h2>Navigation</h2>
+    <ul>
+      <li><a href="/static/pages/artifacts.html">Manage Artifacts</a></li>
+      <li><a href="/static/pages/loans.html">Manage Loans</a></li>
+      <li><a href="/static/pages/museums.html">View Museums</a></li>
+    </ul>
+  </nav>
+
+  <hr />
+
+  <section>
+    <h2>System Overview</h2>
+
+    <div>
+      <h3>Total Artifacts</h3>
+      <p id="artifact-count">Loading...</p>
+      <button onclick="loadArtifactCount()">Refresh Count</button>
+    </div>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>Quick Actions</h2>
+    <button onclick="window.location.href='/static/pages/artifacts.html'">
+      Add New Artifact
+    </button>
+
+    <button onclick="window.location.href='/static/pages/loans.html'">
+      Create Loan
+    </button>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>Activity Output</h2>
+    <div id="data"></div>
+  </section>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

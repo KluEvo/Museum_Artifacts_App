@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Artifacts</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Artifact Management</h1>
+    <a href="/static/index.html">← Back to Dashboard</a>
+  </header>
+
+  <hr />
+
+  <section>
+    <h2>Search Artifacts</h2>
+
+    <h3>By ID</h3>
+    <input type="text" id="search-id" />
+    <button onclick="searchById()">Search</button>
+
+    <h3>By Name</h3>
+    <input type="text" id="search-name" />
+    <button onclick="searchByName()">Search</button>
+
+    <h3>By Accession Number</h3>
+    <input type="text" id="search-accession" />
+    <button onclick="searchByAccession()">Search</button>
+
+    <div id="search-results"></div>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>All Artifacts</h2>
+    <button onclick="loadAllArtifacts()">Load All</button>
+    <div id="artifact-table"></div>
+  </section>
+
+  <script src="/static/scripts/artifacts.js"></script>
+</body>
+</html>

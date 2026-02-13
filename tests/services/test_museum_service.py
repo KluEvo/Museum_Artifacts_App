@@ -38,8 +38,9 @@ def test_get_museum_by_id_positive():
     assert museum.name == 'test'
 
 def test_remove_museum_positive():
-    pass
+    repo = MockMuseumRepository()
+    svc = museum_service.MuseumService(repo)
+    id = svc.remove_museum('mock_id')
+    assert id == 'mock_id'
 
-def test_update_museum_positive():
-    pass
 

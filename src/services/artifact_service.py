@@ -2,6 +2,7 @@ from src.repositories.artifact_repository_protocol import ArtifactRepositoryProt
 from src.domain.artifact import Artifact
 from src.repositories.museum_repository_protocol import MuseumRepositoryProtocol
 from sqlalchemy.exc import SQLAlchemyError
+from typing import List
 from src.exceptions import (
     AppErrorException,
     ValidationException,
@@ -18,7 +19,7 @@ class ArtifactService:
         self.artifact_repo = artifact_repo
         self.museum_repo = museum_repo 
 
-    def get_all_artifacts(self) -> list[Artifact]:
+    def get_all_artifacts(self) -> List[Artifact]:
         try:
             return self.artifact_repo.get_all_artifacts()
         except SQLAlchemyError as e:
@@ -60,7 +61,7 @@ class ArtifactService:
                 "Database error occurred while removing artifact."
             ) from e
 
-    def find_artifacts_by_name(self, query: str) -> list[Artifact]:
+    def find_artifacts_by_name(self, query: str) -> List[Artifact]:
         if not isinstance(query, str):
             raise ValidationException("Query must be a string.")
 
@@ -74,7 +75,7 @@ class ArtifactService:
                 "Database error occurred while searching artifacts by name."
             ) from e
 
-    def find_artifacts_by_accession_number(self, query: str) -> list[Artifact]:
+    def find_artifacts_by_accession_number(self, query: str) -> List[Artifact]:
         if not isinstance(query, str):
             raise ValidationException("Query must be a string.")
 
@@ -88,7 +89,7 @@ class ArtifactService:
                 "Database error occurred while searching artifacts by accession number."
             ) from e
 
-    def find_artifacts_by_museum(self, query: str) -> list[Artifact]:
+    def find_artifacts_by_museum(self, query: str) -> List[Artifact]:
         if not isinstance(query, str):
             raise ValidationException("Museum ID must be a string.")
 
@@ -105,7 +106,7 @@ class ArtifactService:
                 "Database error occurred while searching artifacts by museum."
             ) from e
 
-    def find_parent_artifact(self, query: str) -> list[Artifact]:
+    def find_parent_artifact(self, query: str) -> List[Artifact]:
         if not isinstance(query, str):
             raise ValidationException("Query must be a string.")
 

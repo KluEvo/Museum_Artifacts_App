@@ -1,6 +1,8 @@
 import os
 import requests
 from fastapi import Depends, FastAPI, Query, HTTPException, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from fastapi.responses import JSONResponse
@@ -31,6 +33,10 @@ from src.services.condition_report_service import ConditionReportService
 # Initialize FastAPI app
 app = FastAPI(title="Museum API")
 running = True
+BASE_DIR = os.getcwd()
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
 
 # Set up logging and exception handlers
 logger = logging.getLogger(__name__)
@@ -94,6 +100,10 @@ def run_sql(db: Session = Depends(get_db)):
     db.execute(text(sql_commands))
     db.commit()
 
+#ROUTES
+@app.get("/")
+async def root():
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 @app.post("/artifact/add", response_model=str)
 def add_artifact(payload: ArtifactCreate, artifact_svc: ArtifactService = Depends(get_artifact_service)):
@@ -194,7 +204,7 @@ def get_all_museums(
     return svc.get_all_museums()
 
 #Get conditon report on artifact id
-@app.get("/condition", response_model=ConditionReportRead)
+@app.get("/condition_report", response_model=ConditionReportRead)
 def get_condition_report(
     id: str = Query(..., min_length=1), 
     svc: ConditionReportService = Depends(get_condition_report_service)
@@ -202,6 +212,16 @@ def get_condition_report(
     #Working
     report = svc.get_condition_report_by_id(id)
     return report
+
+@app.get("/condition", response_model=List[ConditionReportRead])
+def get_condition_report(
+    id: str = Query(..., min_length=1), 
+    svc: ConditionReportService = Depends(get_condition_report_service)
+):
+    #Working
+    report = svc.get_condition_report_by_artifact(id)
+    return report
+
 
 #Get artifact's loan history by artifact id
 @app.get('/loan_contents' , response_model=List[ArtifactRead])

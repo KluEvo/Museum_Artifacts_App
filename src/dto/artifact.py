@@ -1,6 +1,9 @@
 from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel
+from pydantic.config import ConfigDict
+
+
 from uuid import UUID
 
 class ArtifactCreate(BaseModel):
@@ -16,6 +19,7 @@ class ArtifactCreate(BaseModel):
 
 class ArtifactRead(ArtifactCreate):
 
+    model_config = ConfigDict(from_attributes = True)
     artifact_id: UUID
     accession_number: str
     name: str
@@ -24,8 +28,6 @@ class ArtifactRead(ArtifactCreate):
     parent_artifact: Optional[UUID] = None
     museum_id: UUID 
 
-    class Config:
-        from_attributes = True
 
 class ArtifactUpdate(BaseModel):
 
