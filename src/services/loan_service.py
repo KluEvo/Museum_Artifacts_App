@@ -1,11 +1,14 @@
 from src.repositories.loan_repository_protocol import LoanRepositoryProtocol
 from src.domain.loan import Loan
+from typing import List
 from sqlalchemy.exc import SQLAlchemyError
 from src.exceptions import (
     AppErrorException,
     ValidationException,
     NotFoundException,
 )
+import logging
+logger = logging.getLogger(__name__)
 
 
 class LoanService:
@@ -22,6 +25,15 @@ class LoanService:
             raise AppErrorException(
                 "Database error occurred while adding loan."
             ) from e
+        
+    def get_all_loans(self) -> List[Loan]:
+        try:
+            return self.loan_repo.get_all_loans()
+        except SQLAlchemyError as e:
+            raise AppErrorException(
+                "Database error occurred while retrieving all artifacts."
+            ) from e
+        
     
     def get_loan_by_id(self, loan_id: str) -> Loan:
         if not isinstance(loan_id, str):

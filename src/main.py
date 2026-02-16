@@ -10,7 +10,7 @@ from src.exceptions import AppErrorException
 from typing import List
 import logging
 
-
+from src.logging_config import setup_logging
 from src.db.deps import get_db
 from src.domain.artifact import Artifact
 from src.domain.loan import Loan
@@ -39,8 +39,8 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 # Set up logging and exception handlers
+setup_logging()
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 @app.exception_handler(AppErrorException)
 async def app_exception_handler(request: Request, exc: AppErrorException):
     logger.warning(f"Application error: {exc}")
@@ -105,12 +105,12 @@ def run_sql(db: Session = Depends(get_db)):
 async def root():
     return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
-@app.post("/artifact/add", response_model=str)
+@app.post("/artifact", response_model=str)
 def add_artifact(payload: ArtifactCreate, artifact_svc: ArtifactService = Depends(get_artifact_service)):
     artifact = Artifact(**payload.model_dump())
     return artifact_svc.add_artifact(artifact)
 
-@app.get("/artifacts", response_model=List[ArtifactRead])
+@app.get("/artifact/all", response_model=List[ArtifactRead])
 def get_all_artifacts(
     svc: ArtifactService = Depends(get_artifact_service)
 ):
@@ -161,8 +161,9 @@ def remove_artifact_name(
     all_named_artifacts = svc.find_artifacts_by_name(name)
     removed_list = []
     for artifact in all_named_artifacts:
-        removed = svc.remove_artifact(artifact.artifact_id)
-        removed_list.append(removed)
+        if artifact.artifact_id:
+            removed = svc.remove_artifact(str(artifact.artifact_id))
+            removed_list.append(removed)
     return removed_list
 
 @app.post("/loan", response_model=str)
@@ -196,7 +197,7 @@ def remove_loan(
 ):
     return svc.remove_loan(id)
 
-@app.get("/museumsall", response_model=List[MuseumRead])
+@app.get("/museum/all", response_model=List[MuseumRead])
 def get_all_museums(
     svc: MuseumService = Depends(get_museum_service)
 ):
@@ -214,7 +215,7 @@ def get_condition_report(
     return report
 
 @app.get("/condition", response_model=List[ConditionReportRead])
-def get_condition_report(
+def get_condition_of_artifact(
     id: str = Query(..., min_length=1), 
     svc: ConditionReportService = Depends(get_condition_report_service)
 ):
@@ -259,7 +260,7 @@ def get_artifacts_loan(
     artifact_loans = al_svc.get_artifact_loan_by_ids(artifact_id, loan_id)
     return artifact_loans
     
-@app.get("/artifacts/from_museum", response_model=List[ArtifactRead])
+@app.get("/artifact/from_museum", response_model=List[ArtifactRead])
 def get_all_artifacts_of_a_museum(
     id: str = Query(..., min_length=1), 
     svc: ArtifactService = Depends(get_artifact_service)

@@ -13,7 +13,7 @@ app.dependency_overrides[get_artifact_service] = override_artifact_service
 client = TestClient(app)
 
 def test_get_all_artifacts():
-    response = client.get("/artifacts")
+    response = client.get("/artifact/all")
     assert response.status_code == 200
     assert response.json() == [
         {'accession_number': 'MOCK12345', 

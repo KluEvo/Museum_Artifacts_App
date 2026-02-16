@@ -8,6 +8,8 @@ from src.exceptions import (
     ValidationException,
     NotFoundException,
 )
+import logging
+logger = logging.getLogger(__name__)
 
 
 class ArtifactService:
@@ -40,6 +42,8 @@ class ArtifactService:
         if not isinstance(artifact, Artifact):
             raise ValidationException("Invalid Artifact object provided.")
 
+        logger.info("Adding artifact %s", artifact.accession_number)
+
         try:
             return self.artifact_repo.add_artifact(artifact)
         except SQLAlchemyError as e:
@@ -50,6 +54,8 @@ class ArtifactService:
     def remove_artifact(self, artifact_id: str) -> str:
         if not isinstance(artifact_id, str):
             raise ValidationException("Artifact ID must be a string.")
+
+        logger.info("Removing artifact %s", artifact_id)
 
         try:
             removed_id = self.artifact_repo.remove_artifact(artifact_id)
@@ -137,6 +143,8 @@ class ArtifactService:
     def update_artifact(self, artifact_id: str, updated_fields_dict: dict) -> str:
         if not isinstance(artifact_id, str):
             raise ValidationException("Artifact ID must be a string.")
+
+        logger.info("Updating artifact %s", artifact_id)
 
         if not isinstance(updated_fields_dict, dict):
             raise ValidationException("Updated fields must be a dictionary.")

@@ -35,9 +35,44 @@
   <hr />
 
   <section>
+    <h2>Create Artifact</h2>
+
+    <input type="text" id="create-name" placeholder="Name" />
+    <br />
+
+    <input type="text" id="create-accession" placeholder="Accession Number" />
+    <br />
+
+    <input type="date" id="create-discovery" />
+    <br />
+
+    <input type="number" id="create-value" placeholder="Estimated Value" />
+    <br />
+
+    <input type="text" id="create-parent" placeholder="Parent Artifact ID" />
+    <br />
+
+    <input type="text" id="create-museum" placeholder="Museum ID" />
+    <br /><br />
+
+    <button onclick="createArtifact()">Create</button>
+
+    <div id="create-output"></div>
+  </section>
+
+  <hr />
+
+  <section>
     <h2>All Artifacts</h2>
-    <button onclick="loadAllArtifacts()">Load All</button>
+    <button onclick="loadAllArtifacts()">Reload</button>
     <div id="artifact-table"></div>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>Output</h2>
+    <div id="artifact-output"></div>
   </section>
 
   <script src="/static/scripts/artifacts.js"></script>

@@ -5,11 +5,13 @@ from src.repositories.museum_repository_protocol import MuseumRepositoryProtocol
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from typing import List
+import logging
 from src.exceptions import (
     AppErrorException,
     ValidationException,
     NotFoundException,
 )
+logger = logging.getLogger(__name__)
 
 
 class MockArtifactService:

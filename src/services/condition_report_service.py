@@ -7,6 +7,8 @@ from src.exceptions import (
     ValidationException,
     NotFoundException,
 )
+import logging
+logger = logging.getLogger(__name__)
 
 
 class ConditionReportService:
