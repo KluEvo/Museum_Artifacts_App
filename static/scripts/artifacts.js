@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadAllArtifacts();
+    document.getElementById("artifact-form").addEventListener("submit", handleFormSubmit);
 });
 
 async function apiFetch(url, options = {}) {
@@ -54,7 +55,7 @@ function renderArtifactsTable(artifacts, containerId) {
                 <td>${a.museum_id}</td>
                 <td>
                     <button onclick="deleteArtifact('${a.artifact_id}')">Delete</button>
-                    <button onclick="populateUpdate('${a.artifact_id}','${a.name}','${a.accession_number}','${a.discovery_date}','${a.estimated_value}','${a.parent_artifact}','${a.museum_id}')">Edit</button>
+                    <button onclick='populateUpdate(${JSON.stringify(a)})'>Edit</button>
                 </td>
             </tr>
         `;
@@ -73,53 +74,88 @@ async function loadAllArtifacts() {
     }
 }
 
-async function createArtifact() {
-    const name = document.getElementById("create-name").value.trim();
-    const accession = document.getElementById("create-accession").value.trim();
-    const discovery = document.getElementById("create-discovery").value;
-    const value = document.getElementById("create-value").value;
-    const parent = document.getElementById("create-parent").value.trim();
-    const museum = document.getElementById("create-museum").value.trim();
+function getFormData() {
+    const id = document.getElementById("artifact-id").value;
+    const name = document.getElementById("artifact-name").value.trim();
+    const accession = document.getElementById("artifact-accession").value.trim();
+    const discovery = document.getElementById("artifact-discovery").value;
+    const value = document.getElementById("artifact-value").value;
+    const parent = document.getElementById("artifact-parent").value.trim();
+    const museum = document.getElementById("artifact-museum").value.trim();
 
-    if (!name || !accession || !museum) {
-        document.getElementById("create-output").innerText = 
+    const discoveryDateIso = discovery ? `${discovery}T00:00:00` : null;
+
+    return {
+        id,
+        payload: {
+            name,
+            accession_number: accession,
+            discovery_date: discoveryDateIso,
+            estimated_value: value ? parseInt(value) : null,
+            parent_artifact: parent || null,
+            museum_id: museum
+        }
+    };
+}
+
+async function handleFormSubmit(event) {
+    event.preventDefault();
+
+    const { id, payload } = getFormData();
+
+    if (!payload.name || !payload.accession_number || !payload.museum_id) {
+        document.getElementById("form-output").innerText =
             "Name, Accession Number, and Museum ID are required.";
         return;
     }
 
-    const discoveryDateIso = discovery ? `${discovery}T00:00:00` : null;
-
-    const payload = {
-        name: name,
-        accession_number: accession,
-        discovery_date: discoveryDateIso,
-        estimated_value: value ? parseInt(value) : null,
-        parent_artifact: parent || null,
-        museum_id: museum
-    };
-
     try {
-        await apiFetch("/artifact", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
+        if (id) {
+            await apiFetch(`/artifact/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            document.getElementById("form-output").innerText = "Artifact updated.";
+        } else {
+            await apiFetch("/artifact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            document.getElementById("form-output").innerText = "Artifact created.";
+        }
 
-        document.getElementById("create-output").innerText = "Artifact created.";
+        resetForm();
         loadAllArtifacts();
 
     } catch (error) {
-        document.getElementById("create-output").innerText = error.message;
+        document.getElementById("form-output").innerText = error.message;
     }
 }
 
+function populateUpdate(artifact) {
+    document.getElementById("form-title").innerText = "Update Artifact";
+    document.getElementById("artifact-id").value = artifact.artifact_id;
+    document.getElementById("artifact-name").value = artifact.name || "";
+    document.getElementById("artifact-accession").value = artifact.accession_number || "";
+    document.getElementById("artifact-discovery").value = artifact.discovery_date ? artifact.discovery_date.split("T")[0] : "";
+    document.getElementById("artifact-value").value = artifact.estimated_value || "";
+    document.getElementById("artifact-parent").value = artifact.parent_artifact || "";
+    document.getElementById("artifact-museum").value = artifact.museum_id || "";
+}
+
+function resetForm() {
+    document.getElementById("form-title").innerText = "Create Artifact";
+    document.getElementById("artifact-form").reset();
+    document.getElementById("artifact-id").value = "";
+}
 
 async function deleteArtifact(id) {
     try {
         await apiFetch(`/artifact?id=${id}`, {
             method: "DELETE"
         });
-
         loadAllArtifacts();
     } catch (error) {
         document.getElementById("artifact-output").innerText = error.message;
@@ -160,46 +196,4 @@ async function searchByAccession() {
     } catch (error) {
         document.getElementById("search-results").innerText = error.message;
     }
-}
-
-function populateUpdate(id, name, accession, discovery, value, parent, museum) {
-    const newName = prompt("Enter new name:", name);
-    if (newName === null) return;
-
-    const newAccession = prompt("Enter new accession number:", accession);
-    if (newAccession === null) return;
-
-    const newDiscovery = prompt("Enter new discovery date (YYYY-MM-DD):", discovery ? discovery.split('T')[0] : "");
-    if (newDiscovery === null) return;
-
-    const newValue = prompt("Enter new estimated value:", value ?? "");
-    if (newValue === null) return;
-
-    const newParent = prompt("Enter new parent artifact ID (or leave blank):", parent ?? "");
-    if (newParent === null) return;
-
-    const newMuseum = prompt("Enter new museum ID:", museum);
-    if (newMuseum === null) return;
-
-    const discoveryDateIso = newDiscovery ? `${newDiscovery}T00:00:00` : null;
-
-    const payload = {
-        name: newName,
-        accession_number: newAccession,
-        discovery_date: discoveryDateIso,
-        estimated_value: newValue ? parseInt(newValue) : null,
-        parent_artifact: newParent || null,
-        museum_id: newMuseum
-    };
-
-    apiFetch(`/artifact/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    }).then(() => {
-        document.getElementById("artifact-output").innerText = "Artifact updated.";
-        loadAllArtifacts();
-    }).catch(err => {
-        document.getElementById("artifact-output").innerText = err.message;
-    });
 }

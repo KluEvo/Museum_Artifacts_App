@@ -35,29 +35,34 @@
   <hr />
 
   <section>
-    <h2>Create Artifact</h2>
+    <h2 id="form-title">Create Artifact</h2>
 
-    <input type="text" id="create-name" placeholder="Name" />
-    <br />
+    <form id="artifact-form">
+      <input type="hidden" id="artifact-id" />
 
-    <input type="text" id="create-accession" placeholder="Accession Number" />
-    <br />
+      <input type="text" id="artifact-name" placeholder="Name" />
+      <br />
 
-    <input type="date" id="create-discovery" />
-    <br />
+      <input type="text" id="artifact-accession" placeholder="Accession Number" />
+      <br />
 
-    <input type="number" id="create-value" placeholder="Estimated Value" />
-    <br />
+      <input type="date" id="artifact-discovery" />
+      <br />
 
-    <input type="text" id="create-parent" placeholder="Parent Artifact ID" />
-    <br />
+      <input type="number" id="artifact-value" placeholder="Estimated Value" />
+      <br />
 
-    <input type="text" id="create-museum" placeholder="Museum ID" />
-    <br /><br />
+      <input type="text" id="artifact-parent" placeholder="Parent Artifact ID" />
+      <br />
 
-    <button onclick="createArtifact()">Create</button>
+      <input type="text" id="artifact-museum" placeholder="Museum ID" />
+      <br /><br />
 
-    <div id="create-output"></div>
+      <button type="submit">Save</button>
+      <button type="button" onclick="resetForm()">Cancel</button>
+    </form>
+
+    <div id="form-output"></div>
   </section>
 
   <hr />
