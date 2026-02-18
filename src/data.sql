@@ -410,24 +410,30 @@ VALUES
 -- Constraints on Artifact Loan
 -- ============================================
 
-ALTER TABLE artifact_loans DROP CONSTRAINT artifact_id_fk_removal;
 
-ALTER TABLE artifact_loans DROP CONSTRAINT loan_id_fk_removal;
+ALTER TABLE artifact_loans DROP CONSTRAINT artifact_loans_artifact_id_fkey;
+ALTER TABLE artifact_loans DROP CONSTRAINT artifact_loans_loan_id_fkey;
+ALTER TABLE condition_reports DROP CONSTRAINT condition_reports_artifact_id_fkey;
 
 
 ALTER TABLE artifact_loans 
-ADD CONSTRAINT artifact_id_fk_removal
+ADD CONSTRAINT artifact_loans_artifact_id_fkey
 FOREIGN KEY (artifact_id)
 REFERENCES artifacts(artifact_id)
 ON DELETE CASCADE;
 
 ALTER TABLE artifact_loans 
-ADD CONSTRAINT loan_id_fk_removal
+ADD CONSTRAINT artifact_loans_loan_id_fkey
 FOREIGN KEY (loan_id)
 REFERENCES loans(loan_id)
 ON DELETE CASCADE;
 
 
+ALTER TABLE condition_reports 
+ADD CONSTRAINT condition_reports_artifact_id_fkey
+FOREIGN KEY (artifact_id)
+REFERENCES artifacts(artifact_id)
+ON DELETE CASCADE;
 
 select * from loans;
 select * from condition_reports;
