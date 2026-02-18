@@ -22,7 +22,6 @@ class ArtifactLoanService:
         try:
             return str(self.artifact_loan_repo.add_artifact_loan(artifact_loan))
         except SQLAlchemyError as e:
-            logger.exception("Database error while adding artifact loan")
             raise AppErrorException(
                 "Database error occurred while adding artifact loan."
             ) from e
@@ -39,7 +38,6 @@ class ArtifactLoanService:
                 )
             return artifact_loan
         except SQLAlchemyError as e:
-            logger.exception("Database error while adding artifact loan")
             raise AppErrorException(
                 "Database error occurred while retrieving artifact loan."
             ) from e
@@ -54,7 +52,6 @@ class ArtifactLoanService:
                 raise NotFoundException(f"No artifact loans found for artifact_id {artifact_id}.")
             return loans
         except SQLAlchemyError as e:
-            logger.exception("Database error while retrieving artifact loans for artifact_id=%s", artifact_id)
             raise AppErrorException(
                 "Database error occurred while retrieving artifact loans by artifact."
             ) from e
@@ -69,7 +66,6 @@ class ArtifactLoanService:
                 raise NotFoundException(f"No artifact loans found for loan_id {loan_id}.")
             return loans
         except SQLAlchemyError as e:
-            logger.exception("Database error while retrieving artifact loans for loan_id=%s", loan_id)
             raise AppErrorException(
                 "Database error occurred while retrieving artifact loans by loan."
             ) from e

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    loadArtifactCount();
+    loadAllMuseums();
 });
 
 async function apiFetch(url, options = {}) {
@@ -15,17 +15,45 @@ async function apiFetch(url, options = {}) {
     return response.json();
 }
 
-async function loadArtifactCount() {
-    const output = document.getElementById("data");
-    const countEl = document.getElementById("artifact-count");
+function renderMuseumsTable(museums) {
+    const container = document.getElementById("museum-table");
+    if (!museums || museums.length === 0) {
+        container.innerHTML = "<p>No museums found.</p>";
+        return;
+    }
 
+    let html = `
+        <table border="1" cellpadding="6">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Contact Email</th>
+            </tr>
+    `;
+
+    museums.forEach(m => {
+        html += `
+            <tr>
+                <td>${m.museum_id}</td>
+                <td>${m.name || ""}</td>
+                <td>${m.location || ""}</td>
+                <td>${m.contact_email || ""}</td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+    container.innerHTML = html;
+}
+
+async function loadAllMuseums() {
+    const container = document.getElementById("museum-table");
+    container.innerText = "Loading museums...";
     try {
-        countEl.innerText = "Loading...";
-        const count = await apiFetch("/artifact/count");
-        countEl.innerText = count;
-        output.innerText = "Artifact count loaded successfully.";
+        const museums = await apiFetch("/museum/all");
+        renderMuseumsTable(museums);
     } catch (error) {
-        countEl.innerText = "Error";
-        output.innerText = error.message;
+        container.innerText = error.message;
     }
 }

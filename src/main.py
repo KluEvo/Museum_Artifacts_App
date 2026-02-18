@@ -173,7 +173,13 @@ def add_loan(
 ):
     loan = Loan(**payload.model_dump())
     return loan_svc.add_loan(loan)
-        
+
+@app.get("/loan/all", response_model=List[LoanRead])
+def get_all_loans(
+    svc: LoanService = Depends(get_loan_service)
+):
+    return svc.get_all_loans()
+
 @app.get("/loan/id", response_model=LoanRead)
 def get_loan_by_id(
     id: str = Query(..., min_length=1), 
@@ -181,7 +187,7 @@ def get_loan_by_id(
 ):
     return svc.get_loan_by_id(id)
 
-@app.patch("/loan/{loan_id}", response_model=str)
+@app.put("/loan/{loan_id}", response_model=str)
 def update_loan(
     loan_id: str, 
     payload: LoanUpdate, 

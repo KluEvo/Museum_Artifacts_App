@@ -20,7 +20,7 @@ class LoanRepository(LoanRepositoryProtocol):
 
     def remove_loan(self, loan_id: str) -> str:
         loan = self.session.get(Loan, loan_id)
-        if not loan is None:
+        if loan is None:
             return None
 
         self.session.delete(loan)

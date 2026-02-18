@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Loans</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Loan Management</h1>
+    <a href="/static/index.html">← Back to Dashboard</a>
+  </header>
+
+  <hr />
+
+  <section>
+    <h2>Search Loan</h2>
+    <h3>By Loan ID</h3>
+    <input type="text" id="search-loan-id" />
+    <button id="search-btn">Search</button>
+    <div id="search-results"></div>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2 id="form-title">Create Loan</h2>
+    <form id="loan-form">
+      <input type="hidden" id="loan-id" />
+      <h3>Loan Start Date</h3>
+      <input type="date" id="loan-start-date" />
+      <br />
+      <h3>Loan End Date</h3>
+      <input type="date" id="loan-end-date" />
+      <br />
+      <input type="text" id="loan-status" placeholder="Loan Status" />
+      <br />
+      <input type="text" id="loan-insurance" placeholder="Insurance Value" />
+      <br />
+      <input type="text" id="loan-to-museum" placeholder="To Museum ID" />
+      <br />
+      <input type="text" id="loan-from-museum" placeholder="From Museum ID" />
+      <br /><br />
+
+      <button type="submit">Save</button>
+      <button type="button" id="cancel-btn">Cancel</button>
+    </form>
+
+    <div id="form-output"></div>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>All Loans</h2>
+    <div id="loan-output"></div>
+  </section>
+
+  <script src="/static/scripts/loans.js" defer></script>
+</body>
+</html>

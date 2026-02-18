@@ -25,6 +25,7 @@ class ArtifactService:
         try:
             return self.artifact_repo.get_all_artifacts()
         except SQLAlchemyError as e:
+            logger.exception("Database error while retrieving all artifacts")
             raise AppErrorException(
                 "Database error occurred while retrieving all artifacts."
             ) from e
@@ -34,8 +35,9 @@ class ArtifactService:
             artifacts = self.artifact_repo.get_all_artifacts()
             return len(artifacts)
         except SQLAlchemyError as e:
+            logger.exception("Database error while retrieving artifact count")
             raise AppErrorException(
-                "Database error occurred while retrieving all artifacts."
+                "Database error occurred while retrieving artifact count."
             ) from e
 
     def add_artifact(self, artifact: Artifact) -> str:

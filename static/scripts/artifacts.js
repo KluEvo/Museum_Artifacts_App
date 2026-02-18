@@ -68,7 +68,7 @@ function renderArtifactsTable(artifacts, containerId) {
 async function loadAllArtifacts() {
     try {
         const artifacts = await apiFetch("/artifact/all");
-        renderArtifactsTable(artifacts, "artifact-table");
+        renderArtifactsTable(artifacts, "artifact-output");
     } catch (error) {
         document.getElementById("artifact-output").innerText = error.message;
     }

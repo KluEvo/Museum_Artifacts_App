@@ -17,31 +17,27 @@
     <ul>
       <li><a href="/static/pages/artifacts.html">Manage Artifacts</a></li>
       <li><a href="/static/pages/loans.html">Manage Loans</a></li>
-      <li><a href="/static/pages/museums.html">View Museums</a></li>
     </ul>
   </nav>
 
+  <section>
+    <h2>Museums</h2>
+    <button onclick="loadAllMuseums()">Refresh Museums</button>
+    <div id="museum-table">Loading museums...</div>
+  </section>
+
   <hr />
 
   <section>
-    <h2>System Overview</h2>
-
+    <h2>Analytics</h2>
     <div>
-      <h3>Total Artifacts</h3>
-      <p id="artifact-count">Loading...</p>
-      <button onclick="loadArtifactCount()">Refresh Count</button>
+      <img src="/static/images/APerM.png" alt="Chart 1" width="400" />
+      <img src="/static/images/AvgCondByM.png" alt="Chart 2" width="400" />
+      <img src="/static/images/EstValHist.png" alt="Chart 3" width="400" />
+      <img src="/static/images/LByStatus.png" alt="Chart 4" width="400" />
     </div>
   </section>
 
-  <hr />
-
-  <hr />
-
-  <section>
-    <h2>Activity Output</h2>
-    <div id="data"></div>
-  </section>
-
-  <script src="/static/app.js"></script>
+  <script src="/static/app.js" defer></script>
 </body>
 </html>
