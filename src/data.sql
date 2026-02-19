@@ -439,3 +439,4 @@ select * from loans;
 select * from condition_reports;
 select * from artifacts;
 select * from artifact_loans;
+select * from museums;

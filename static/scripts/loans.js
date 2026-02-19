@@ -28,7 +28,7 @@ function renderLoansTable(loans, containerId) {
     }
 
     let html = `
-        <table border="1" cellpadding="6">
+        <table>
             <tr>
                 <th>Loan ID</th>
                 <th>Start Date</th>

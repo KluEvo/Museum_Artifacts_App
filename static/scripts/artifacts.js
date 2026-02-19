@@ -30,7 +30,7 @@ function renderArtifactsTable(artifacts, containerId) {
     }
 
     let html = `
-        <table border="1" cellpadding="6">
+        <table>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
