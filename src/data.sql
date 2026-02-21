@@ -69,7 +69,7 @@ VALUES
  'Ancient Egyptian Sarcophagus',
  'MET-EGY-778',
  '1922-11-04',
- 2000000.00,
+ 2600000.00,
  NULL,
  '9275c5b5-0d69-4c65-ac41-d377657f39e8'),
 
